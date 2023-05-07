@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public class Converter 
 {
     public static String intArrToString(int[] arr)

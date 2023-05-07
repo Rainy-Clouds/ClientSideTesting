@@ -17,14 +17,7 @@ public class Client implements Runnable
     {
         while(running)
         {
-            if(Main.keyMap[2])
-            {
-                Main.localx -= 5;
-            }
-            if(Main.keyMap[3])
-            {
-                Main.localx += 5;
-            }
+            int[] locals = {Main.localx, Main.localy};
 
             try
             {
@@ -33,17 +26,18 @@ public class Client implements Runnable
                 //scan.close();
 
                 Socket s = new Socket("192.168.1.38", 0125);
+                s.setTcpNoDelay(true);
+                s.setSendBufferSize(40000);
                 DataOutputStream dout = new DataOutputStream(s.getOutputStream());
                 //BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
-                dout.writeUTF(String.valueOf(Main.localx));
-                System.out.println(Main.localx);
+                dout.writeUTF(Converter.intArrToString(locals));
                 //System.out.println(reader.readLine());
                 dout.flush();
                 dout.close();
                 //reader.close();
                 s.close();
 
-                Thread.sleep(10);
+                Thread.sleep(65);
             }
             catch(Exception e)
             {

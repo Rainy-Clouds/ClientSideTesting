@@ -5,6 +5,7 @@ import java.util.Scanner;
 public class Client implements Runnable
 {
     private boolean running;
+    private int myPort;
 
     public Client()
     {
@@ -15,6 +16,21 @@ public class Client implements Runnable
 
     public void run()
     {
+        try
+        {
+            Socket soc = new Socket("192.168.1.38", 7777);
+            //s.setTcpNoDelay(true);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(soc.getInputStream()));
+            myPort = Integer.valueOf(reader.readLine());
+            System.out.println(myPort);
+            reader.close();
+            soc.close();
+        }
+        catch(Exception e)
+        {
+            System.out.println(e);
+        }
+
         while(running)
         {
             int[] locals = {Main.localx, Main.localy};
@@ -25,7 +41,7 @@ public class Client implements Runnable
                 // String str = scan.nextLine();
                 //scan.close();
 
-                Socket s = new Socket("192.168.1.38", 0125);
+                Socket s = new Socket("192.168.1.38", myPort);
                 s.setTcpNoDelay(true);
                 s.setSendBufferSize(40000);
                 DataOutputStream dout = new DataOutputStream(s.getOutputStream());

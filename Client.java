@@ -5,7 +5,6 @@ import java.util.Scanner;
 public class Client implements Runnable
 {
     private boolean running;
-    private int myPort;
 
     public Client()
     {
@@ -16,15 +15,12 @@ public class Client implements Runnable
 
     public void run()
     {
+        Socket s = null;
         try
         {
-            Socket soc = new Socket("192.168.1.38", 7777);
-            //s.setTcpNoDelay(true);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(soc.getInputStream()));
-            myPort = Integer.valueOf(reader.readLine());
-            System.out.println(myPort);
-            reader.close();
-            soc.close();
+            s = new Socket("192.168.1.38", 0125);
+            s.setTcpNoDelay(true);
+            s.setSendBufferSize(40000);
         }
         catch(Exception e)
         {
@@ -41,24 +37,29 @@ public class Client implements Runnable
                 // String str = scan.nextLine();
                 //scan.close();
 
-                Socket s = new Socket("192.168.1.38", myPort);
-                s.setTcpNoDelay(true);
-                s.setSendBufferSize(40000);
-                DataOutputStream dout = new DataOutputStream(s.getOutputStream());
+                PrintStream dout = new PrintStream(s.getOutputStream());
                 //BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
-                dout.writeUTF(Converter.intArrToString(locals));
+                dout.println(Converter.intArrToString(locals));
                 //System.out.println(reader.readLine());
                 dout.flush();
-                dout.close();
+                //dout.close();
                 //reader.close();
-                s.close();
 
-                Thread.sleep(65);
+                Thread.sleep(30);
             }
             catch(Exception e)
             {
                 System.out.println(e);
             }
         }
+
+        // try
+        // {
+        //     s.close();
+        // }
+        // catch(Exception e)
+        // {
+        //     System.out.println(e);
+        // }
     }
 }
